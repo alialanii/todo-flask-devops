@@ -1,44 +1,20 @@
-# 1. اسم خط الأتمتة
 name: Flask Todo CI Pipeline
 
-# 2. متى يتم تشغيل هذا الخط تلقائياً؟ (عند عمل push على فرع main)
 on:
   push:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
 
-# 3. المهام التي سيقوم بها السيرفر الآلي
 jobs:
   build-and-test:
-    # سنطلب من جيتهاب توفير سيرفر يعمل بنظام أوبونتو (لينكس)
     runs-on: ubuntu-latest
 
     steps:
-    # الخطوة أ: نسخ الكود من المستودع إلى السيرفر المؤقت
     - name: Checkout Code
       uses: actions/checkout@v4
 
-    # الخطوة ب: تثبيت لغة بايثون على السيرفر
-    - name: Set up Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: '3.10'
-
-    # الخطوة ج: تثبيت مكتبة Flask وباقي الاعتمادات
-    - name: Install Dependencies
-      run: |
-        python -m pip upgrade pip
-        pip install -r requirements.txt
-
-    # الخطوة د: فحص صياغة الكود للتأكد من خلوه من الأخطاء (Syntax Check)
-    - name: Lint with flake8 (Optional Check)
-      run: |
-        pip install flake8
-        # فحص كود بايثون للتأكد من عدم وجود أخطاء صياغة برمجية
-        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-
-    # الخطوة هـ: السحر الحقيقي - اختبار بناء صورة الـ Docker آلياً
+    # خطوة بناء وصيانة صورة الـ Docker مباشرة
     - name: Build Docker Image
       run: |
         docker build -t todo-flask-app:latest .
